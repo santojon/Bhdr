@@ -451,6 +451,27 @@ function Bhdr(options) {
             }
 
             return result;
+        },
+        /**
+         * Function used to import 'database' from given type
+         * @param type: the type to import, as string
+         * @param db: the 'database' to import
+         */
+        importFrom: function(db, type) {
+            var result = false;
+
+            switch (type) {
+                case 'javascript':
+                    data = db;
+                    result = true;
+                    break;
+                case 'json':
+                    data = JSON.parse(db);
+                    result = true;
+                    break;
+            }
+
+            return result;
         }
     };
 
@@ -487,7 +508,7 @@ function Bhdr(options) {
      */
     Array.prototype.remove = function (val) {
         var i = this.indexOf(val);
-        return (i > -1) ? this.splice(i, 1) : [];
+        return (i > -1) ? this.splice(i, 1) : this;
     };
 
     /**
@@ -536,8 +557,7 @@ function Bhdr(options) {
 	        });
 
 	        return r.reduce(function(a, b) { return a + b; }) / this.count();
-	    } else {
-	        return 0;
 	    }
+	    return 0;
 	};
 })();
