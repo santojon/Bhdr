@@ -1,13 +1,14 @@
 /**
  * Class responsible to simulate a database
- * TODO @param options: Database options
+ * @param [optional] container: the container object to put classes in (default is window)
+ * TODO @param [optional] options: Database options
  */
-function Bhdr(options) {
-
+function Bhdr(container, options) {
     // needed variables
     var pool = this;
-    var data = {};
+    var data = new Object();
     var baseId = 1;
+    var container = container || window;
 
     // The pool itself
     pool.prototype = {
@@ -110,6 +111,26 @@ function Bhdr(options) {
             }
 
             return obj;
+        },
+        /**
+         * Function used to update instances in 'database'
+         * @param klass: the class of the object to add
+         * @param obj: the object to update in 'database'
+         * @param newObj: the new object
+         * @param callback: an optional callback function to run after insert
+         */
+        update: function(klass, obj, newObj, callback) {
+            var cname = klass.prototype.constructor.name;
+            if (!data[cname]) {
+                return null;
+            } else {
+                if (obj instanceof klass) {
+                    data[cname][pool.prototype.getId(klass, obj)] = newObj;
+                    return callback ? callback(newObj) : newObj;
+                }
+
+                return obj;
+            }
         },
         /**
          * Function used to remove instances from 'database'
@@ -337,6 +358,10 @@ function Bhdr(options) {
             	return pool.prototype.insert(klass, obj, callback);
             };
 
+            klass.update = function(obj, newObj, callback) {
+            	return pool.prototype.update(klass, obj, newObj, callback);
+            };
+
             klass.remove = function(obj, callback) {
                 return pool.prototype.delete(klass, obj, callback);
             };
@@ -373,12 +398,24 @@ function Bhdr(options) {
                 return pool.prototype.get(klass, id);
             };
 
+            klass.getId = function(obj) {
+                return pool.prototype.getId(klass, obj);
+            };
+
             klass.prototype.save = function(callback) {
             	return klass.add(this, callback);
             };
 
             klass.prototype.delete = function(callback) {
             	return klass.remove(this, callback);
+            };
+
+            klass.prototype.update = function(newObj, callback) {
+            	return klass.update(this, newObj, callback);
+            };
+
+            klass.prototype.id = function() {
+                return klass.getId(this);
             };
 
             klass.createTable = function(callback) {
@@ -419,14 +456,35 @@ function Bhdr(options) {
 
             if (data[cname]) {
                 return data[cname][id] || null;
+            } else {
+                return null;
             }
-            return null;
+        },
+        /**
+         * Get the id of element in database
+         * @param klass: the related class
+         * @param obj: the object
+         */
+        getId: function(klass, obj) {
+            var cname = klass.prototype.constructor.name;
+
+            if (data[cname]) {
+                var res = [];
+
+                Object.keys(data[cname]).forEach(function(key) {
+                    if (data[cname][key] === obj) res.push(key);
+                });
+
+                return (res.count() > 0) ? res.first() : null;
+            } else {
+                return null;
+            }
         },
         /**
          * Function used to export 'database' to given type
          * @param type: the type to export, as string
          */
-        exportAs: function(type) {
+        export: function(type) {
             var result;
 
             switch (type) {
@@ -457,7 +515,7 @@ function Bhdr(options) {
          * @param type: the type to import, as string
          * @param db: the 'database' to import
          */
-        importFrom: function(db, type) {
+        import: function(db, type) {
             var result = false;
 
             switch (type) {
@@ -466,13 +524,94 @@ function Bhdr(options) {
                     result = true;
                     break;
                 case 'json':
-                    data = JSON.parse(db);
+                    var p = new Object();
+                    var j = JSON.parse(db);
+
+                    // For each 'table'
+                    Object.keys(j).forEach(function(k) {
+                        // 'k' is the classname
+                        p[k] = new Object();
+
+                        // For each object in 'table'
+                        Object.keys(j[k]).forEach(function(key) {
+                            if (key === 'id') {
+                                p[k][key] = j[k][key];
+                            } else {
+                                // create an object
+                                p[k][key] = new container[k]({});
+                                setupClass(p[k][key], j[k][key], container[k]);
+                            }
+                        });
+                    });
+
+                    pool.prototype.import(p, 'javascript');
                     result = true;
                     break;
             }
 
             return result;
         }
+    };
+
+    /**
+     * Setup a class with all subclasses
+     * @param to: where to put the result of class setup
+     * @param from: generic object to create a setupped one with
+     * @param mainClass: the class of the original top-level object (by tablename)
+     */
+    var setupClass = function(to, from, mainClass) {
+        Object.keys(from).forEach(function(k) {
+            // sub-objects
+            if ((from[k] instanceof Object) && !(from[k] instanceof Array)) {
+                // Bwf made classes have this property (or you can inject)
+                // the types for each property in top-level class
+                if (mainClass['__types']) {
+                    // the current key has a defined type
+                    if (mainClass.__types[k]) {
+                        to[k] = new mainClass.__types[k]({});
+
+                        // go deeper in sub-objects
+                        setupClass(to[k], from[k], mainClass.__types[k]);
+                    } else {        // type not defined
+                        to[k] = from[k];
+                    }
+                } else {        // no '__types' property
+                    to[k] = from[k];
+                }
+            } else if (from[k] instanceof Array) {
+                to[k] = new Array();
+                // TODO: import typed arrays
+                from[k].forEach(function(ff) {
+                    // Bwf made have this property (or you can inject)
+                    // the types for each property in top-level object
+                    if (mainClass['__types']) {
+                        // the current key has a defined type
+                        if (mainClass.__types[k]) {
+                            // and is a list
+                            if (mainClass.__types[k] instanceof Array) {
+                                // not empty
+                                if (mainClass.__types[k].length > 0) {
+                                    to[k].push(new mainClass.__types[k][0](ff));
+
+                                    // go deeper in sub-objects
+                                    setupClass(to[k].last(), ff, mainClass.__types[k][0]);
+                                } else {        // empty array type
+                                    to[k] = ff;
+                                }
+                            } else {        // not an array
+                                to[k] = ff;
+                            }
+                        } else {        // type not defined
+                            to[k] = ff;
+                        }
+                    } else {        // no '__types' property
+                        to[k] = from[k];
+                    }
+                })
+            } else {        // simple properties
+                to[k] = from[k];
+            }
+        });
     };
 
     /**
@@ -493,6 +632,10 @@ function Bhdr(options) {
         }
 
         return data[cname].id;
+    };
+
+    Bhdr.toString = function() {
+        return 'function Bhdr() { [native code] }';
     };
 
     return pool.prototype.init();
@@ -560,4 +703,50 @@ function Bhdr(options) {
 	    }
 	    return 0;
 	};
+
+	/**
+	 * Get last element from list
+	 */
+	Array.prototype.last = function() {
+	    return this[this.count() - 1];
+	};
+
+	/**
+	 * Get first element from list
+	 */
+	Array.prototype.first = function() {
+	    return this[0];
+	};
+
+	/**
+	 * First element as an array
+	 */
+	Array.prototype.head = function() {
+        return this.length > 0 ? [this[0]] : null;
+    };
+
+    /**
+     * Last element as an array
+     */
+    Array.prototype.lst = function() {
+        return this.length > 0 ? [this[this.length - 1]] : null;
+    };
+
+    /**
+     * The tail of the list (all but first element)
+     */
+    Array.prototype.tail = function() {
+        var a = this;
+        if (a.length > 0) this.shift();
+        return a;
+    };
+
+    /**
+     * The init of the list (all but last element)
+     */
+    Array.prototype.init = function() {
+        var a = this;
+        if (a.length > 0) this.pop();
+        return a;
+    };
 })();
