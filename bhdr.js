@@ -353,98 +353,103 @@ function Bhdr(container, options) {
          * Map the Bhr main functions in class
          * @param klass: the class to map
          */
-        map: function(klass) {
-            klass.add = function(obj, callback) {
-            	return pool.prototype.insert(klass, obj, callback);
-            };
+        map: function() {
+            var args = Array.prototype.slice.call(arguments);
+            if (args && args.length > 0) {
+                args.forEach(function(klass) {
+                    klass.add = function(obj, callback) {
+                        return pool.prototype.insert(klass, obj, callback);
+                    };
 
-            klass.update = function(obj, newObj, callback) {
-            	return pool.prototype.update(klass, obj, newObj, callback);
-            };
+                    klass.update = function(obj, newObj, callback) {
+                        return pool.prototype.update(klass, obj, newObj, callback);
+                    };
 
-            klass.remove = function(obj, callback) {
-                return pool.prototype.delete(klass, obj, callback);
-            };
+                    klass.remove = function(obj, callback) {
+                        return pool.prototype.delete(klass, obj, callback);
+                    };
 
-            klass.find = function(opt) {
-                return pool.prototype.find(klass, opt);
-            };
+                    klass.find = function(opt) {
+                        return pool.prototype.find(klass, opt);
+                    };
 
-            klass.findBy = function(opt) {
-                return pool.prototype.findBy(klass, opt);
-            };
+                    klass.findBy = function(opt) {
+                        return pool.prototype.findBy(klass, opt);
+                    };
 
-            klass.findByI = function(opt) {
-                return pool.prototype.findByI(klass, opt);
-            };
+                    klass.findByI = function(opt) {
+                        return pool.prototype.findByI(klass, opt);
+                    };
 
-            klass.findByLike = function(opt) {
-                return pool.prototype.findByLike(klass, opt);
-            };
+                    klass.findByLike = function(opt) {
+                        return pool.prototype.findByLike(klass, opt);
+                    };
 
-            klass.findByILike = function(opt) {
-                return pool.prototype.findByILike(klass, opt);
-            };
+                    klass.findByILike = function(opt) {
+                        return pool.prototype.findByILike(klass, opt);
+                    };
 
-            klass.findAll = function() {
-                return pool.prototype.findAll(klass);
-            };
+                    klass.findAll = function() {
+                        return pool.prototype.findAll(klass);
+                    };
 
-            klass.findWhere = function(rfunc) {
-                return pool.prototype.findWhere(klass, rfunc);
-            };
+                    klass.findWhere = function(rfunc) {
+                        return pool.prototype.findWhere(klass, rfunc);
+                    };
 
-            klass.get = function(id) {
-                return pool.prototype.get(klass, id);
-            };
+                    klass.get = function(id) {
+                        return pool.prototype.get(klass, id);
+                    };
 
-            klass.getId = function(obj) {
-                return pool.prototype.getId(klass, obj);
-            };
+                    klass.getId = function(obj) {
+                        return pool.prototype.getId(klass, obj);
+                    };
 
-            klass.prototype.save = function(callback) {
-            	return klass.add(this, callback);
-            };
+                    klass.prototype.save = function(callback) {
+                        return klass.add(this, callback);
+                    };
 
-            klass.prototype.delete = function(callback) {
-            	return klass.remove(this, callback);
-            };
+                    klass.prototype.delete = function(callback) {
+                        return klass.remove(this, callback);
+                    };
 
-            klass.prototype.update = function(newObj, callback) {
-            	return klass.update(this, newObj, callback);
-            };
+                    klass.prototype.update = function(newObj, callback) {
+                        return klass.update(this, newObj, callback);
+                    };
 
-            klass.prototype.id = function() {
-                return klass.getId(this);
-            };
+                    klass.prototype.id = function() {
+                        return klass.getId(this);
+                    };
 
-            klass.createTable = function(callback) {
-            	return pool.prototype.createTable(klass, callback);
-            };
+                    klass.createTable = function(callback) {
+                        return pool.prototype.createTable(klass, callback);
+                    };
 
-            klass.dropTable = function(callback) {
-            	return pool.prototype.dropTable(klass, callback);
-            };
+                    klass.dropTable = function(callback) {
+                        return pool.prototype.dropTable(klass, callback);
+                    };
 
-            // Add mapping for all properties in objects to array (if inexistent)
-            Object.keys(klass.prototype).forEach(function(k) {
-                Array.prototype[k] = Array.prototype[k] || function() {
-                    if (this[0]) {
-                        if (this[0]['instanceof']) {
-                            if (this[0]['instanceof'](klass)) {
-                                return this.map(function(x) { return x[k]; });
+                    // Add mapping for all properties in objects to array (if inexistent)
+                    Object.keys(klass.prototype).forEach(function(k) {
+                        Array.prototype[k] = Array.prototype[k] || function() {
+                            if (this[0]) {
+                                if (this[0]['instanceof']) {
+                                    if (this[0]['instanceof'](klass)) {
+                                        return this.map(function(x) { return x[k]; });
+                                    }
+                                } else {
+                                    if (this[0] instanceof klass) {
+                                        return this.map(function(x) { return x[k]; });
+                                    }
+                                }
                             }
-                        } else {
-                            if (this[0] instanceof klass) {
-                                return this.map(function(x) { return x[k]; });
-                            }
-                        }
-                    }
-                    return [];
-                };
-            });
+                            return [];
+                        };
+                    });
 
-            return klass;
+                    return klass;
+                });
+            }
         },
         /**
          * Function used get the 'entity' with the given class and id
