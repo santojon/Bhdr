@@ -6,12 +6,16 @@
 function Bhdr(container, options) {
     // needed variables
     var pool = this;
-    var data = new Object();
+    var data = new Object({ _locked: false, _lockedTimes: 0 });
     var baseId = 1;
     var container = container || window;
 
     // The pool itself
     pool.prototype = {
+        /**
+         * Locked status of the DB
+         */
+        locked: data._locked,
         /**
          * Function responsible to initialize the pool
          */
@@ -490,6 +494,11 @@ function Bhdr(container, options) {
          * @param type: the type to export, as string
          */
         export: function(type) {
+            if (!data._locked) {
+                data._locked = true;
+                data._lockedTimes = data._lockedTimes + 1;
+            }
+
             var result;
 
             switch (type) {
@@ -513,6 +522,7 @@ function Bhdr(container, options) {
                     break;
             }
 
+            data._locked = false;
             return result;
         },
         /**
@@ -534,8 +544,14 @@ function Bhdr(container, options) {
 
                     // For each 'table'
                     Object.keys(j).forEach(function(k) {
-                        // 'k' is the classname
-                        p[k] = new Object();
+
+                        // DB flags
+                        if ((k === '_locked') || (k === '_lockedTimes')) {
+                            p[k] = j[k];
+                        } else {
+                            // 'k' is the classname
+                            p[k] = new Object();
+                        }
 
                         // For each object in 'table'
                         Object.keys(j[k]).forEach(function(key) {
@@ -554,6 +570,7 @@ function Bhdr(container, options) {
                     break;
             }
 
+            data._locked = false;
             return result;
         }
     };
@@ -678,7 +695,7 @@ function Bhdr(container, options) {
 	/**
      * Order an array of objects by fields
      * @param field: the field to order by
-     * @param reverse: true to order descending
+     * @param order: true to order descending
      * @param rfunc: function to restrict compairson scope (if needed)
      */
 	Array.prototype.orderBy = function (field, order, rfunc) {
