@@ -1,0 +1,30 @@
+{
+    "compileOnSave": true,
+    "compilerOptions": {
+        "declaration": true,
+        "pretty": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "sourceRoot": "./src/main/",
+        "declarationDir": "./types/",
+        "outDir": "./dist/lib/",
+        "moduleResolution": "node",
+        "module": "commonjs",
+        "target": "es5",
+        "noImplicitAny": true,
+        "noImplicitUseStrict": true,
+        //"noUnusedParameters": true,
+        "lib": [
+            "dom",
+            "es2015",
+            "es2017"
+        ]
+    },
+    "include": [
+        "src/main/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spect.ts"
+    ]
+}

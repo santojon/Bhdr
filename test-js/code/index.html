@@ -1,0 +1,13 @@
+<html>
+    <head>
+        <title>Bhdr tests</title>
+        <script type="text/javascript" src="../../dist/Bhdr.js"></script>
+    </head>
+    <body>
+        <h1>Bhdr</h1>
+        <h2 id="result"></h2>
+        <script type="text/javascript">
+            document.getElementById('result').innerHTML = new Bhdr(this).export('json')
+        </script>
+    </body>
+</html>
