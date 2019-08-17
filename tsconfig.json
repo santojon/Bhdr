@@ -10,7 +10,7 @@
         "outDir": "./dist/lib/",
         "moduleResolution": "node",
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "noImplicitAny": true,
         "noImplicitUseStrict": true,
         //"noUnusedParameters": true,

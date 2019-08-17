@@ -1,8 +1,8 @@
 {
 	"name": "bhdr2",
-	"version": "2.0.0",
+	"version": "2.0.2",
 	"description": "Bhdr (Brynhildr) .findBy({ A javascript data pool: to simulate a database })",
-	"main": "./dist/Bhdr.js",
+	"main": "./dist/lib/Bhdr.js",
 	"directories": {
 		"test": "test",
 		"src": "src",
@@ -20,23 +20,25 @@
 	},
 	"keywords": [
 		"javascript",
+		"typescript",
 		"database",
-		"bhdr"
+		"bhdr",
+		"bhdr2"
 	],
 	"author": "Jonathan Santos (@santojon)",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/santojon/Bhdr/issues"
 	},
-	"homepage": "https://github.com/santojon/Bhdr#readme",
+	"homepage": "https://github.com/santojon/Bhdr/tree/Bhdr2#readme",
 	"devDependencies": {
-		"@types/chai": "^4.0.10",
-		"@types/mocha": "^2.2.44",
-		"browserify": "^14.5.0",
-		"chai": "^4.1.2",
-		"mocha": "^4.0.1",
-		"testcafe": "^0.18.5",
-		"ts-node": "^4.0.1",
-		"typescript": "^2.6.2"
+		"@types/chai": "^4.2.0",
+		"@types/mocha": "^5.2.7",
+		"browserify": "^16.5.0",
+		"chai": "^4.2.0",
+		"mocha": "^6.2.0",
+		"testcafe": "^1.4.1",
+		"ts-node": "^8.3.0",
+		"typescript": "^3.5.3"
 	}
 }

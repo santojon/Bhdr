@@ -4,7 +4,7 @@
  - npm install    
 
 ## compile typescript
- - tsc tsconfig.json    
+ - tsc
 
 ## Create bundle (browserify)
  - npm run bundle    
