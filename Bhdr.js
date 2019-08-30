@@ -1,0 +1,1 @@
+window.Bhdr = require('./dist/lib/Bhdr')

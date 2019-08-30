@@ -12,7 +12,7 @@
 		"test": "mocha -r ts-node/register src/test/Bhdr.spec.ts",
 		"test-js": "node ./test-js/code/test.js",
 		"test-browser": "testcafe chrome ./test-js/code/test-browser.js",
-		"bundle": "browserify ./dist/lib/Bhdr.js -o ./dist/Bhdr.js"
+		"bundle": "browserify -p tinyify ./Bhdr.js -o ./dist/Bhdr.js"
 	},
 	"repository": {
 		"type": "git",
@@ -36,10 +36,11 @@
 		"@types/mocha": "^5.2.7",
 		"browserify": "^16.5.0",
 		"chai": "^4.2.0",
+		"dbarray": "^1.1.0",
 		"mocha": "^6.2.0",
 		"testcafe": "^1.4.1",
+		"tinyify": "^2.5.1",
 		"ts-node": "^8.3.0",
-		"typescript": "^3.5.3",
-		"dbarray": "^1.1.0"
+		"typescript": "^3.5.3"
 	}
 }
