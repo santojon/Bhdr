@@ -1,5 +1,5 @@
 // Require bhdr
-const Bhdr = require('../../../dist/lib/Bhdr').Bhdr
+const Bhdr = require('../../../dist/lib/Bhdr')
 
 // Used in this scope
 const User = require('../../base/User')

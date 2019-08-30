@@ -1,11 +1,11 @@
 // Get DbArray (Array with extras for Bhdr purposes)
-import { DbArray } from './DbArray'
+import DbArray = require('dbarray')
 
 /**
  * Class that represents a data pool
  * Made to simulate an in-memory database
  */
-export class Bhdr {
+class Bhdr {
 
     // needed variables
     private data: any = new Object()
@@ -614,3 +614,5 @@ export class Bhdr {
         })
     }
 }
+
+export = Bhdr

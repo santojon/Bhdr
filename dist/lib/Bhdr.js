@@ -1,5 +1,4 @@
-Object.defineProperty(exports, "__esModule", { value: true });
-const DbArray_1 = require("./DbArray");
+const DbArray = require("dbarray");
 class Bhdr {
     constructor(container, options) {
         this.data = new Object();
@@ -36,7 +35,7 @@ class Bhdr {
                     }
                 }
                 else if (from[k] instanceof Array) {
-                    to[k] = new DbArray_1.DbArray();
+                    to[k] = new DbArray();
                     from[k].forEach((ff) => {
                         if (mainClass['__types']) {
                             if (mainClass.__types[k]) {
@@ -135,12 +134,12 @@ class Bhdr {
         return obj;
     }
     find(klass, opt) {
-        let result = this.findBy(klass, opt) || new DbArray_1.DbArray();
+        let result = this.findBy(klass, opt) || new DbArray();
         return (result.length > 0) ? result[0] : null;
     }
     findBy(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 Object.keys(this.data[cname]).forEach((k) => {
@@ -155,7 +154,7 @@ class Bhdr {
     }
     findByI(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 Object.keys(this.data[cname]).forEach((k) => {
@@ -172,9 +171,9 @@ class Bhdr {
     }
     findByLike(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let partial = new DbArray_1.DbArray();
-        let aux = new DbArray_1.DbArray();
-        let result = new DbArray_1.DbArray();
+        let partial = new DbArray();
+        let aux = new DbArray();
+        let result = new DbArray();
         Object.keys(this.data[cname]).forEach((k) => {
             if (k !== 'id') {
                 partial.push(this.data[cname][k]);
@@ -191,7 +190,7 @@ class Bhdr {
                     }
                 });
                 partial = aux;
-                aux = new DbArray_1.DbArray();
+                aux = new DbArray();
             });
             result = partial;
         }
@@ -199,9 +198,9 @@ class Bhdr {
     }
     findByILike(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let partial = new DbArray_1.DbArray();
-        let aux = new DbArray_1.DbArray();
-        let result = new DbArray_1.DbArray();
+        let partial = new DbArray();
+        let aux = new DbArray();
+        let result = new DbArray();
         Object.keys(this.data[cname]).forEach((k) => {
             if (k !== 'id') {
                 partial.push(this.data[cname][k]);
@@ -218,7 +217,7 @@ class Bhdr {
                     }
                 });
                 partial = aux;
-                aux = new DbArray_1.DbArray();
+                aux = new DbArray();
             });
             result = partial;
         }
@@ -226,7 +225,7 @@ class Bhdr {
     }
     findAll(klass) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(this.data[cname]).forEach((k) => {
                 if (k !== 'id') {
@@ -238,7 +237,7 @@ class Bhdr {
     }
     findWhere(klass, rfunc) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(this.data[cname]).forEach((k) => {
                 if (k !== 'id') {
@@ -324,7 +323,7 @@ class Bhdr {
     getId(klass, obj) {
         let cname = klass.prototype.constructor.name;
         if (this.data[cname]) {
-            let res = new DbArray_1.DbArray();
+            let res = new DbArray();
             Object.keys(this.data[cname]).forEach((key) => {
                 if (this.data[cname][key] === obj)
                     res.push(key);
@@ -399,5 +398,5 @@ class Bhdr {
     }
 }
 Bhdr.baseId = 1;
-exports.Bhdr = Bhdr;
+module.exports = Bhdr;
 //# sourceMappingURL=Bhdr.js.map

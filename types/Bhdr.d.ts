@@ -1,5 +1,5 @@
-import { DbArray } from './DbArray';
-export declare class Bhdr {
+import DbArray = require('dbarray');
+declare class Bhdr {
     private data;
     private static baseId;
     private container;
@@ -26,3 +26,4 @@ export declare class Bhdr {
     private autoIncrementableId;
     private setupClass;
 }
+export = Bhdr;

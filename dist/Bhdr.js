@@ -1,6 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-Object.defineProperty(exports, "__esModule", { value: true });
-const DbArray_1 = require("./DbArray");
+const DbArray = require("dbarray");
 class Bhdr {
     constructor(container, options) {
         this.data = new Object();
@@ -37,7 +36,7 @@ class Bhdr {
                     }
                 }
                 else if (from[k] instanceof Array) {
-                    to[k] = new DbArray_1.DbArray();
+                    to[k] = new DbArray();
                     from[k].forEach((ff) => {
                         if (mainClass['__types']) {
                             if (mainClass.__types[k]) {
@@ -136,12 +135,12 @@ class Bhdr {
         return obj;
     }
     find(klass, opt) {
-        let result = this.findBy(klass, opt) || new DbArray_1.DbArray();
+        let result = this.findBy(klass, opt) || new DbArray();
         return (result.length > 0) ? result[0] : null;
     }
     findBy(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 Object.keys(this.data[cname]).forEach((k) => {
@@ -156,7 +155,7 @@ class Bhdr {
     }
     findByI(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 Object.keys(this.data[cname]).forEach((k) => {
@@ -173,9 +172,9 @@ class Bhdr {
     }
     findByLike(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let partial = new DbArray_1.DbArray();
-        let aux = new DbArray_1.DbArray();
-        let result = new DbArray_1.DbArray();
+        let partial = new DbArray();
+        let aux = new DbArray();
+        let result = new DbArray();
         Object.keys(this.data[cname]).forEach((k) => {
             if (k !== 'id') {
                 partial.push(this.data[cname][k]);
@@ -192,7 +191,7 @@ class Bhdr {
                     }
                 });
                 partial = aux;
-                aux = new DbArray_1.DbArray();
+                aux = new DbArray();
             });
             result = partial;
         }
@@ -200,9 +199,9 @@ class Bhdr {
     }
     findByILike(klass, opt) {
         let cname = klass.prototype.constructor.name;
-        let partial = new DbArray_1.DbArray();
-        let aux = new DbArray_1.DbArray();
-        let result = new DbArray_1.DbArray();
+        let partial = new DbArray();
+        let aux = new DbArray();
+        let result = new DbArray();
         Object.keys(this.data[cname]).forEach((k) => {
             if (k !== 'id') {
                 partial.push(this.data[cname][k]);
@@ -219,7 +218,7 @@ class Bhdr {
                     }
                 });
                 partial = aux;
-                aux = new DbArray_1.DbArray();
+                aux = new DbArray();
             });
             result = partial;
         }
@@ -227,7 +226,7 @@ class Bhdr {
     }
     findAll(klass) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(this.data[cname]).forEach((k) => {
                 if (k !== 'id') {
@@ -239,7 +238,7 @@ class Bhdr {
     }
     findWhere(klass, rfunc) {
         let cname = klass.prototype.constructor.name;
-        let result = new DbArray_1.DbArray();
+        let result = new DbArray();
         if (this.data[cname]) {
             Object.keys(this.data[cname]).forEach((k) => {
                 if (k !== 'id') {
@@ -325,7 +324,7 @@ class Bhdr {
     getId(klass, obj) {
         let cname = klass.prototype.constructor.name;
         if (this.data[cname]) {
-            let res = new DbArray_1.DbArray();
+            let res = new DbArray();
             Object.keys(this.data[cname]).forEach((key) => {
                 if (this.data[cname][key] === obj)
                     res.push(key);
@@ -400,88 +399,105 @@ class Bhdr {
     }
 }
 Bhdr.baseId = 1;
-exports.Bhdr = Bhdr;
+module.exports = Bhdr;
 
-},{"./DbArray":2}],2:[function(require,module,exports){
-Object.defineProperty(exports, "__esModule", { value: true });
-class DbArray extends Array {
-    remove(val) {
-        let a = new DbArray();
-        let aux = this.filter((e) => { e !== val; });
-        aux.forEach((val) => {
+},{"dbarray":2}],2:[function(require,module,exports){
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var DbArray = (function (_super) {
+    __extends(DbArray, _super);
+    function DbArray() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    DbArray.prototype.remove = function (val) {
+        var a = new DbArray();
+        var aux = this.filter(function (e) { e !== val; });
+        aux.forEach(function (val) {
             a.push(val);
         });
         return a;
-    }
-    distinct() {
-        let a = new DbArray();
-        let aux = this.sort().filter((item, pos, array) => {
+    };
+    DbArray.prototype.distinct = function () {
+        var a = new DbArray();
+        var aux = this.sort().filter(function (item, pos, array) {
             return !pos || item != array[pos - 1];
         });
-        aux.forEach((val) => {
+        aux.forEach(function (val) {
             a.push(val);
         });
         return a;
-    }
-    count() {
+    };
+    DbArray.prototype.count = function () {
         return this.length || 0;
-    }
-    orderBy(field, order, rfunc) {
-        let key = rfunc ?
-            (x) => { return rfunc(x[field]); } :
-            (x) => { return x[field]; };
+    };
+    DbArray.prototype.orderBy = function (field, order, rfunc) {
+        var key = rfunc ?
+            function (x) { return rfunc(x[field]); } :
+            function (x) { return x[field]; };
         order = (order === 'desc') ? -1 : 1;
-        return this.sort((a, b) => {
-            let x = key(a);
-            let y = key(b);
-            let xy = x > y;
-            let yx = y > x;
+        return this.sort(function (a, b) {
+            var x = key(a);
+            var y = key(b);
+            var xy = x > y;
+            var yx = y > x;
             return order * (xy - yx);
         });
-    }
-    avg(field) {
+    };
+    DbArray.prototype.avg = function (field) {
         if (this.count() > 0) {
-            let r = [];
-            this.forEach((k) => {
-                r.push(k[field]);
+            var r_1 = [];
+            this.forEach(function (k) {
+                r_1.push(k[field]);
             });
-            return r.reduce((a, b) => { return a + b; }) / this.count();
+            return r_1.reduce(function (a, b) { return a + b; }) / this.count();
         }
         return 0;
-    }
-    last() {
+    };
+    DbArray.prototype.last = function () {
         return this[this.count() - 1];
-    }
-    first() {
+    };
+    DbArray.prototype.first = function () {
         return this[0];
-    }
-    head() {
-        let a = new DbArray();
+    };
+    DbArray.prototype.head = function () {
+        var a = new DbArray();
         if (this.length > 0) {
             a.push(this[0]);
         }
         return a;
-    }
-    lst() {
-        let a = new DbArray();
+    };
+    DbArray.prototype.lst = function () {
+        var a = new DbArray();
         if (this.length > 0) {
             a.push(this[this.length - 1]);
         }
         return a;
-    }
-    tail() {
-        let a = this;
+    };
+    DbArray.prototype.tail = function () {
+        var a = this;
         if (a.length > 0)
             this.shift();
         return a;
-    }
-    init() {
-        let a = this;
+    };
+    DbArray.prototype.init = function () {
+        var a = this;
         if (a.length > 0)
             this.pop();
         return a;
-    }
-}
-exports.DbArray = DbArray;
+    };
+    return DbArray;
+}(Array));
+module.exports = DbArray;
 
-},{}]},{},[2,1]);
+},{}]},{},[1]);

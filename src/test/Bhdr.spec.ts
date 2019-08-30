@@ -1,4 +1,4 @@
-import { Bhdr } from '../main/Bhdr'
+import Bhdr = require('../main/Bhdr')
 import { expect } from 'chai'
 import 'mocha'
 

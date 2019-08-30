@@ -1,5 +1,5 @@
 // Require classes
-const Bhdr = require('../../dist/lib/Bhdr').Bhdr
+const Bhdr = require('../../dist/lib/Bhdr')
 const TestSuite = require('../base/TestSuite')
 
 // Create bhdr to save tests into
