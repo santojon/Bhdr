@@ -1,6 +1,6 @@
 {
 	"name": "bhdr2",
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"description": "Bhdr (Brynhildr) .findBy({ A javascript data pool: to simulate a database })",
 	"main": "./dist/lib/Bhdr.js",
 	"directories": {
@@ -32,15 +32,15 @@
 	},
 	"homepage": "https://github.com/santojon/Bhdr/tree/Bhdr2#readme",
 	"devDependencies": {
-		"@types/chai": "^4.2.0",
-		"@types/mocha": "^5.2.7",
+		"@types/chai": "^4.2.11",
+		"@types/mocha": "^7.0.2",
 		"browserify": "^16.5.0",
 		"chai": "^4.2.0",
 		"dbarray": "^1.1.0",
-		"mocha": "^6.2.0",
-		"testcafe": "^1.4.1",
-		"tinyify": "^2.5.1",
-		"ts-node": "^8.3.0",
-		"typescript": "^3.5.3"
+		"mocha": "^7.1.1",
+		"testcafe": "^1.8.3",
+		"tinyify": "^2.5.2",
+		"ts-node": "^8.8.1",
+		"typescript": "^3.8.3"
 	}
 }
