@@ -19,7 +19,8 @@ class Bhdr {
             return this.data[cname].id;
         };
         this.setupClass = (to, from, mainClass) => {
-            Object.keys(from).forEach((k) => {
+            Object.keys(from).forEach((sk) => {
+                let k = sk.toString();
                 if ((from[k] instanceof Object) && !(from[k] instanceof Array)) {
                     if (mainClass['__types']) {
                         if (mainClass.__types[k]) {
@@ -144,7 +145,7 @@ class Bhdr {
             Object.keys(opt).forEach((key) => {
                 Object.keys(this.data[cname]).forEach((k) => {
                     if (this.data[cname][k][key] &&
-                        (this.data[cname][k][key] === opt[key])) {
+                        (this.data[cname][k][key] === opt[key.toString()])) {
                         result.push(this.data[cname][k]);
                     }
                 });
@@ -160,7 +161,7 @@ class Bhdr {
                 Object.keys(this.data[cname]).forEach((k) => {
                     if (this.data[cname][k][key] &&
                         (this.data[cname][k][key].toString()
-                            .toLowerCase() === opt[key]
+                            .toLowerCase() === opt[key.toString()]
                             .toString().toLowerCase())) {
                         result.push(this.data[cname][k]);
                     }
@@ -182,9 +183,9 @@ class Bhdr {
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 partial.forEach((k) => {
-                    if (k[key]) {
-                        if (k[key].toString()
-                            .indexOf(opt[key].toString()) !== -1) {
+                    if (k[key.toString()]) {
+                        if (k[key.toString()].toString()
+                            .indexOf(opt[key.toString()].toString()) !== -1) {
                             aux.push(k);
                         }
                     }
@@ -209,9 +210,9 @@ class Bhdr {
         if (this.data[cname]) {
             Object.keys(opt).forEach((key) => {
                 partial.forEach((k) => {
-                    if (k[key]) {
-                        if (k[key].toString().toLowerCase()
-                            .indexOf(opt[key].toString().toLowerCase()) !== -1) {
+                    if (k[key.toString()]) {
+                        if (k[key.toString()].toString().toLowerCase()
+                            .indexOf(opt[key.toString()].toString().toLowerCase()) !== -1) {
                             aux.push(k);
                         }
                     }
@@ -342,7 +343,7 @@ class Bhdr {
                 break;
             case 'json':
                 if (ident) {
-                    result = JSON.stringify(this.data, null, ident);
+                    result = JSON.stringify(this.data, null, ident.valueOf());
                 }
                 else {
                     result = JSON.stringify(this.data);
@@ -372,12 +373,13 @@ class Bhdr {
                 break;
             case 'json':
                 let p = new Object();
-                let j = JSON.parse(db);
-                Object.keys(j).forEach((k) => {
+                let j = JSON.parse(db.toString());
+                Object.keys(j).forEach((sk) => {
+                    let k = sk.toString();
                     p[k] = new Object();
                     Object.keys(j[k]).forEach((key) => {
                         if (key === 'id') {
-                            p[k][key] = j[k][key];
+                            p[k][key] = j[k][key.toString()];
                         }
                         else {
                             if (this.container[k]) {
@@ -386,7 +388,7 @@ class Bhdr {
                             else {
                                 p[k][key] = new Object();
                             }
-                            this.setupClass(p[k][key], j[k][key], this.container[k]);
+                            this.setupClass(p[k][key], j[k][key.toString()], this.container[k]);
                         }
                     });
                 });
